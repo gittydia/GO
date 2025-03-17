@@ -1,4 +1,4 @@
-package chatting
+package function
 
 import "fmt"
 
