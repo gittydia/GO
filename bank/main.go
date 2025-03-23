@@ -58,7 +58,7 @@ func main() {
 		} else if choice == 2 {
 			function.Login(&u2, db)
 			if u2.Email != "" && u2.Name != "" { // Ensure login was successful
-				fmt.Println("Welcome to the bank" + ", " + u2.Name + "!")
+				fmt.Println("Welcome to the bank" + ", " + u2.Email + "!")
 
 				// Retrieve AccountID for the logged-in user
 				err := db.QueryRow("SELECT AccountID FROM Accounts WHERE CustomerID = (SELECT CustomerID FROM Customers WHERE Email = ?)", u2.Email).Scan(&account.AccountID)
