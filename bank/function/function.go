@@ -41,25 +41,31 @@ func Login(u2 *LoginU, u1 *SigninU) {
 }
 
 type UserAccount struct {
-    balance float64
-    accountType string
-    amount float64
+    Balance float64
+    AccountType string
+    Amount float64
 }
 //bank account
-func deposit(account *UserAccount) {
+func Deposit(account *UserAccount) {
     fmt.Println("Enter the amount you want to deposit: ")
-    fmt.Scanln(&account.amount)
-    account.balance += account.amount
+    fmt.Scanln(&account.Amount)
+    account.Balance += account.Amount
     fmt.Println("Deposit successful")
 }
 
-func withdraw(account *UserAccount) {
+func Withdraw(account *UserAccount) {
     fmt.Println("Enter the amount you want to withdraw: ")
-    fmt.Scanln(&account.amount)
-    if account.balance >= account.amount {
-        account.balance -= account.amount
+    fmt.Scanln(&account.Amount)
+    if account.Balance >= account.Amount {
+        account.Balance -= account.Amount
         fmt.Println("Withdrawal successful")
     } else {
         fmt.Println("Insufficient balance")
     }
 }
+func CheckBalance(account *UserAccount) {
+    fmt.Println("Your balance is: ", account.Balance)
+}
+
+    
+
