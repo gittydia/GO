@@ -126,7 +126,7 @@ BEGIN
 
         -- Record the transaction for the destination account
         INSERT INTO Transactions (AccountID, TransactionType, Amount, RelatedAccountID)
-        VALUES (p_ToAccountID, 'TRANSFER', p_FromAccountID);
+        VALUES (p_ToAccountID, 'TRANSFER', p_Amount, p_FromAccountID);
 
         COMMIT;
     ELSE
