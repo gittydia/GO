@@ -115,9 +115,10 @@ func Login(u2 *LoginU, db *sql.DB) {
 }
 
 type UserAccount struct {
-	AccountID int
-	Balance   float64
-	Amount    float64
+	AccountID     int
+	AccountNumber string
+	Balance       float64
+	Amount        float64
 }
 
 func Deposit(account *UserAccount, db *sql.DB) {
@@ -181,5 +182,56 @@ func CheckBalance(account *UserAccount, db *sql.DB) {
 		return
 	}
 	fmt.Println("Your balance is: ", account.Balance)
+}
+
+func TransferMoney(account *UserAccount, db *sql.DB) {
+	fmt.Println("Enter the account number of the receiver: ")
+	var receiverAccountNumber string
+	fmt.Scanln(&receiverAccountNumber)
+
+	if receiverAccountNumber == account.AccountNumber {
+		fmt.Println("Error: Cannot transfer to the same account.")
+		return
+	}
+	if strings.TrimSpace(receiverAccountNumber) == "" {
+		fmt.Println("Error: Account number cannot be empty.")
+		return
+	}
+
+	// Resolve the receiver's AccountID from the AccountNumber
+	var receiverAccountID int
+	err := db.QueryRow("SELECT AccountID FROM Accounts WHERE AccountNumber = ?", receiverAccountNumber).Scan(&receiverAccountID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			fmt.Println("Error: Receiver's account not found")
+		} else {
+			fmt.Println("Error retrieving receiver's account information:", err)
+		}
+		return
+	}
+
+	fmt.Println("Enter the amount you want to transfer: ")
+	fmt.Scanln(&account.Amount)
+
+	if account.Amount <= 0 {
+		fmt.Println("Error: Transfer amount must be greater than zero.")
+		return
+	}
+
+	// Call the TransferMoney stored procedure with correct parameters
+	_, err = db.Exec("CALL TransferMoney(?, ?, ?)", account.AccountID, receiverAccountID, account.Amount)
+	if err != nil {
+		fmt.Println("Error during transfer:", err)
+		return
+	}
+	fmt.Println("Transfer successful!")
+
+	// Show updated balance
+	err = db.QueryRow("SELECT Balance FROM Accounts WHERE AccountID = ?", account.AccountID).Scan(&account.Balance)
+	if err != nil {
+		fmt.Println("Unable to retrieve new balance")
+		return
+	}
+	fmt.Printf("Your updated balance is: %.2f\n", account.Balance)
 }
 
