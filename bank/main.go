@@ -88,7 +88,8 @@ func main() {
 					fmt.Println("1. Deposit")
 					fmt.Println("2. Withdraw")
 					fmt.Println("3. Check balance")
-					fmt.Println("4. Exit")
+					fmt.Println("4. Transfer Money")
+					fmt.Println("5. Exit")
 					fmt.Print("Enter your choice: ")
 					_, err := fmt.Scanln(&choice)
 					if err != nil {
@@ -102,6 +103,8 @@ func main() {
 					} else if choice == 3 {
 						function.CheckBalance(&account, db)
 					} else if choice == 4 {
+						function.TransferMoney(&account, db)
+					} else if choice == 5 {
 						fmt.Println("Exiting...")
 						break
 					} else {
